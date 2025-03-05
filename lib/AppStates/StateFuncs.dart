@@ -33,6 +33,28 @@ class MainAppState extends ChangeNotifier{
     return tmpTotalCost;
   }
 
+  // ItemBricks
+
+  void addBrick(String name,int quant){
+    globals.ItemBricks[name]=quant;
+    notifyListeners();
+  }
+
+  ItemBrick getItemBrickByName(String name){
+    return ItemBrick(name: name, quantity: MainAppState().getCardByName(name).quantity);
+  }
+
+  void deltaItemBrickValueByName(String name,int dv){
+    if(globals.ItemBricks.containsKey(name)){
+      globals.ItemBricks[name]=globals.ItemBricks[name]!+dv;
+    }
+  }
+
+  void removeItemBrickByName(String name){
+    globals.ItemBricks.remove(name);
+    notifyListeners();
+  }
+
 //-------------TANPPIN CARDS----------------
 
   // Hive states

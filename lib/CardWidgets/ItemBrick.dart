@@ -5,7 +5,7 @@ import '../globals.dart' as globals;
 import '../PopUpWidgets/EditPUP.dart';
 import 'package:super_banners/super_banners.dart';
 
-class ItemBrick extends StatefulWidget {
+class ItemBrick extends StatefulWidget{
   ItemBrick({
     super.key,
     required this.name,
@@ -19,21 +19,23 @@ class ItemBrick extends StatefulWidget {
 
 }
 
-class _ItemBrickState extends State<ItemBrick>
-    with TickerProviderStateMixin{
+class _ItemBrickState extends State<ItemBrick>{
 
 
   String get Name => widget.name;
   int get quantity => widget.quantity;
   int tmpcount=0;
   Color imageBGcolor = Color(0xFF1f1f1f);
-  int tmpQuantity=0;
 
   @override
   void initState() {
     super.initState();
-    tmpQuantity=quantity;
-    tmpcount=0;
+    tmpcount=1;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -69,10 +71,15 @@ class _ItemBrickState extends State<ItemBrick>
                 IconButton(
                   onPressed: (){
                     setState(() {
-                      if(tmpcount>0){
+                      if(tmpcount>1){
                         tmpcount--;
+                        globals.ItemBricks[Name]=tmpcount;
+                      }
+                      else{
+                        Provider.of<MainAppState>(context,listen: false).removeItemBrickByName(Name);
                       }
                     });
+                    print(globals.ItemBricks.toString());
                   },
                   icon: Icon(Icons.remove_rounded,size: 16,),color: Color(0xFFFFFFFF),),
                 Text(
@@ -87,8 +94,11 @@ class _ItemBrickState extends State<ItemBrick>
                     setState(() {
                       if(tmpcount<quantity){
                         tmpcount++;
+                        globals.ItemBricks[Name]=tmpcount;
                       }
+
                     });
+                    print(globals.ItemBricks.toString());
                   },
                   icon: Icon(Icons.add_rounded,size: 16,),color: Color(0xFFFFFFFF),),
               ],

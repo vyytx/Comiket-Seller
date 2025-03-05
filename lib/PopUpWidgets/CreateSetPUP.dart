@@ -1,8 +1,8 @@
 
 import 'package:comiket_seller/CardWidgets/ItemBrick.dart';
 import 'package:comiket_seller/CardWidgets/ItemCard.dart';
+import 'package:comiket_seller/PopUpWidgets/NoEnoughItemWarnPUP.dart';
 import 'package:flutter/material.dart';
-import 'package:comiket_seller/main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pair/pair.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +27,21 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
     with TickerProviderStateMixin {
 
   List<String> singleItemList=MainAppState().getAllItemList();
-  Map<String,int> ItemBricks = {};
+  late String tmpName;
+  late String tmpPrice;
+  late String tmpQuant;
+  late String tmpUri;
+  final _nameContr = TextEditingController();
+  final _priceContr = TextEditingController();
+  final _quantContr = TextEditingController();
+  final _urlContr = TextEditingController();
+  final _searchContr = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    globals.ItemBricks.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +66,6 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
     );
     Color _formInputCur = Color(0xFFd6d6d6);
     TextStyle _formInputSty = TextStyle(color: Color(0xFFd6d6d6));
-    final _nameContr = TextEditingController();
-    final _priceContr = TextEditingController();
-    final _quantContr = TextEditingController();
-    final _urlContr = TextEditingController();
-    final _searchContr = TextEditingController();
 
     return Container(
       //height: 1500,
@@ -200,7 +209,7 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
                       },
                       onSelected: (suggestion) {
                         setState(() {
-                          ItemBricks[suggestion]=MainAppState().getCardByName(suggestion).quantity;
+                          Provider.of<MainAppState>(context,listen: false).addBrick(suggestion, 1);
                         });
                         // _searchContr.clear();
                       },
@@ -209,7 +218,7 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
                     Wrap(
                       alignment: WrapAlignment.center,
                       children: [
-                        for(String i in ItemBricks.keys) ItemBrick(name: i, quantity: ItemBricks[i]!)
+                        for(String i in globals.ItemBricks.keys) Provider.of<MainAppState>(context,listen: true).getItemBrickByName(i)
                       ],
                     ),
                     SizedBox(height: 20,),
@@ -230,12 +239,43 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
                             ),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                // globals.AllC.insert(globals.AllC.length,ItemCard(id: globals.AllC.length,name: _nameContr.text, price: int.parse(_priceContr.text), quantity: int.parse(_quantContr.text), image_uri: _urlContr.text.isNotEmpty?_urlContr.text:null,));
-                                Provider.of<MainAppState>(context, listen: false).setSetCard(MainAppState.getNowSetId(), _nameContr.text, int.parse(_priceContr.text), int.parse(_quantContr.text), _urlContr.text.isNotEmpty?_urlContr.text:"", {});
-                                Navigator.of(context).pop();
-                                if(!MainAppState.getSetWrapInit()) {
-                                  context.pushReplacement('/makeSet');
-                                  await MainAppState.setWrapInit();
+                                Map<String,Pair<int,int>> tmpError={};
+                                for(String i in globals.ItemBricks.keys){
+                                  if(globals.ItemBricks[i]!*int.parse(_quantContr.text)>Provider.of<MainAppState>(context, listen: false).getCardByName(i).quantity){
+                                    tmpError[i]=Pair<int,int>(globals.ItemBricks[i]!*int.parse(_quantContr.text),Provider.of<MainAppState>(context, listen: false).getCardByName(i).quantity);
+                                  }
+                                }
+                                if(tmpError.isNotEmpty){
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      barrierLabel:
+                                      MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                                      barrierColor: Colors.black54.withOpacity(0.8),
+                                      builder: (context) {
+                                        return AlertDialog(
+                                            scrollable: true,
+                                            backgroundColor: Colors.transparent,
+                                            content: NoItemWardCard(need: tmpError));
+                                      });
+                                }
+                                else{
+                                  for(String i in globals.ItemBricks.keys){
+                                    Provider.of<MainAppState>(context, listen: false).editCard(
+                                        i,
+                                        Provider.of<MainAppState>(context, listen: false).getCardByName(i).id,
+                                        i,
+                                        Provider.of<MainAppState>(context, listen: false).getCardByName(i).price,
+                                        Provider.of<MainAppState>(context, listen: false).getCardByName(i).quantity-globals.ItemBricks[i]!,
+                                        Provider.of<MainAppState>(context, listen: false).getCardByName(i).image_uri
+                                    );
+                                  }
+                                  Provider.of<MainAppState>(context, listen: false).setSetCard(MainAppState.getNowSetId(), _nameContr.text, int.parse(_priceContr.text), int.parse(_quantContr.text), _urlContr.text.isNotEmpty?_urlContr.text:"", globals.ItemBricks);
+                                  Navigator.of(context).pop();
+                                  if(!MainAppState.getSetWrapInit()) {
+                                    context.pushReplacement('/makeSet');
+                                    await MainAppState.setWrapInit();
+                                  }
                                 }
                               }
                             },

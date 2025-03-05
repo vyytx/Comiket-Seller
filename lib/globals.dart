@@ -1,6 +1,7 @@
 import 'package:window_manager/window_manager.dart';
 
 Map<String,int> tmpcart = {};
+Map<String,int> ItemBricks = {};
 bool isInApp = true; // web false, mobile/app true
 
 String needAssetPath(String url){
