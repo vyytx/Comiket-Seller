@@ -195,6 +195,7 @@ class _ItemCardState extends State<ItemCard>
                         Provider.of<MainAppState>(context, listen: false).delCard(widget.name);
                       }
                       else if(type==ItemCardType.set){
+                        Provider.of<MainAppState>(context, listen: false).returnInSetItemsByName(widget.name,widget.quantity);
                         Provider.of<MainAppState>(context, listen: false).delSetCard(widget.name);
                       }
 

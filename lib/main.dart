@@ -51,7 +51,7 @@ void main() async {
 
 GoRouter get _router => GoRouter(
   errorBuilder: ((context, state) => notFoundPage()),
-  initialLocation: '/makeSet',
+  initialLocation: '/',
   // debugLogDiagnostics: true,
   routes: [
     GoRoute(

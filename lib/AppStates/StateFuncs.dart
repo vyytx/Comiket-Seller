@@ -217,6 +217,20 @@ class MainAppState extends ChangeNotifier{
     return ItemCard(type:ItemCardType.set, name: sellSetBox.keyAt(id), price: sellSetBox.getAt(id)['price'], quantity: sellSetBox.getAt(id)['quantity'], id: id, image_uri: sellSetBox.getAt(id)['image_uri'].toString().isNotEmpty?sellSetBox.getAt(id)['image_uri'].toString():null, hasdel: false);
   }
 
+  Future<void> returnInSetItemsByName(String name,int setQ) async{
+    for(String i in sellSetBox.get(name)['items'].keys){
+      int tmpq=sellSetBox.get(name)['items'][i];
+      editCard(
+          i,
+          getCardByName(i).id,
+          i,
+          getCardByName(i).price,
+          getCardByName(i).quantity+(tmpq*setQ),
+          getCardByName(i).image_uri
+      );
+    }
+  }
+
 
 
 

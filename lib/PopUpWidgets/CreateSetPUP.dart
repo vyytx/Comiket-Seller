@@ -266,7 +266,7 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
                                         Provider.of<MainAppState>(context, listen: false).getCardByName(i).id,
                                         i,
                                         Provider.of<MainAppState>(context, listen: false).getCardByName(i).price,
-                                        Provider.of<MainAppState>(context, listen: false).getCardByName(i).quantity-globals.ItemBricks[i]!,
+                                        Provider.of<MainAppState>(context, listen: false).getCardByName(i).quantity-globals.ItemBricks[i]!*int.parse(_quantContr.text),
                                         Provider.of<MainAppState>(context, listen: false).getCardByName(i).image_uri
                                     );
                                   }
