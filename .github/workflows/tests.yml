@@ -24,4 +24,4 @@ jobs:
 
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter test widget_test
+      - run: flutter test .\test\widget_test.dart
