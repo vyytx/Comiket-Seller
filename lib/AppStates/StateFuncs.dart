@@ -58,27 +58,40 @@ class MainAppState extends ChangeNotifier{
 //-------------TANPPIN CARDS----------------
 
   // Hive states
-  static final sellItemBox = Hive.box('cardBox');
-
+  // static final sellItemBox = Hive.box('cardBox');
+  static final Map<String,dynamic> sellItemBox = {};
   Future<void> setCard(int id, String name, int price, int quantity, String? image_uri) async {
-    await sellItemBox.put(name, {
+    // await sellItemBox.put(name, {
+    //   'id': id,
+    //   'price': price,
+    //   'quantity': quantity,
+    //   'image_uri': image_uri!.isNotEmpty?image_uri:"null",
+    // });
+    sellItemBox[name] = {
       'id': id,
       'price': price,
       'quantity': quantity,
       'image_uri': image_uri!.isNotEmpty?image_uri:"null",
-    });
+    };
     notifyListeners();
   }
 
   Future<void> editCard(String origName, int id, String name, int price, int quantity, String? image_uri) async {
-    await sellItemBox.put(name, {
+    // await sellItemBox.put(name, {
+    //   'id': id,
+    //   'price': price,
+    //   'quantity': quantity,
+    //   'image_uri': image_uri!.isNotEmpty?image_uri:"null",
+    // });
+    sellItemBox[name] = {
       'id': id,
       'price': price,
       'quantity': quantity,
       'image_uri': image_uri!.isNotEmpty?image_uri:"null",
-    });
+    };
     if(origName!=name) {
-      await sellItemBox.delete(origName);
+      // await sellItemBox.delete(origName);
+      sellItemBox.remove(origName);
     }
     notifyListeners();
   }
@@ -97,28 +110,30 @@ class MainAppState extends ChangeNotifier{
   }
 
   static Future<void> delAllCards() async {
-    await sellItemBox.clear();
+    sellItemBox.clear();
   }
 
   Future<void> delCard(String name) async{
-    await sellItemBox.delete(name);
+    // await sellItemBox.delete(name);
+    sellItemBox.remove(name);
     notifyListeners();
   }
 
   ItemCard getCard(int id){
-    return ItemCard(name: sellItemBox.keyAt(id), price: sellItemBox.getAt(id)['price'], quantity: sellItemBox.getAt(id)['quantity'], id: id, image_uri: sellItemBox.getAt(id)['image_uri'].toString().isNotEmpty?sellItemBox.getAt(id)['image_uri'].toString():null);
+    // return ItemCard(name: sellItemBox.keyAt(id), price: sellItemBox.getAt(id)['price'], quantity: sellItemBox.getAt(id)['quantity'], id: id, image_uri: sellItemBox.getAt(id)['image_uri'].toString().isNotEmpty?sellItemBox.getAt(id)['image_uri'].toString():null);
+    return ItemCard(name: sellItemBox.keys.elementAt(id), price: sellItemBox[sellItemBox.keys.elementAt(id)]['price'], quantity: sellItemBox[sellItemBox.keys.elementAt(id)]['quantity'], id: id, image_uri: sellItemBox[sellItemBox.keys.elementAt(id)]['image_uri'].toString().isNotEmpty?sellItemBox[sellItemBox.keys.elementAt(id)]['image_uri'].toString():null);
   }
 
   ItemCard getCardByName(String name){
-    return ItemCard(name: name, price: sellItemBox.get(name)['price'], quantity: sellItemBox.get(name)['quantity'], id: sellItemBox.get(name)['id'], image_uri: sellItemBox.get(name)['image_uri'].toString().isNotEmpty?sellItemBox.get(name)['image_uri'].toString():null);
+    return ItemCard(name: name, price: sellItemBox[name]['price'], quantity: sellItemBox[name]['quantity'], id: sellItemBox[name]['id'], image_uri: sellItemBox[name]['image_uri'].toString().isNotEmpty?sellItemBox[name]['image_uri'].toString():null);
   }
 
   ItemCard getSellCard(int id){
-    return ItemCard(name: sellItemBox.keyAt(id), price: sellItemBox.getAt(id)['price'], quantity: sellItemBox.getAt(id)['quantity'], id: id, image_uri: sellItemBox.getAt(id)['image_uri'].toString().isNotEmpty?sellItemBox.getAt(id)['image_uri'].toString():null, hasdel: false);
+    return ItemCard(name: sellItemBox.keys.elementAt(id), price: sellItemBox[sellItemBox.keys.elementAt(id)]['price'], quantity: sellItemBox[sellItemBox.keys.elementAt(id)]['quantity'], id: id, image_uri: sellItemBox[sellItemBox.keys.elementAt(id)]['image_uri'].toString().isNotEmpty?sellItemBox[sellItemBox.keys.elementAt(id)]['image_uri'].toString():null, hasdel: false);
   }
 
   ItemBrick getSellBrick(int id){
-    return ItemBrick(name: sellItemBox.keyAt(id), quantity: sellItemBox.getAt(id)['quantity']);
+    return ItemBrick(name: sellItemBox.keys.elementAt(id), quantity: sellItemBox[sellItemBox.keys.elementAt(id)]['quantity']);
   }
 
   List<String> getAllItemList(){
@@ -131,54 +146,82 @@ class MainAppState extends ChangeNotifier{
 
   Future<void> deltaQuantity() async {
     for(final i in globals.tmpcart.keys){
-        if(i.startsWith('{SET}')){
-          await sellSetBox.put(i.substring(i.indexOf('{SET}')+5, i.length), {
-            'id': sellSetBox.length,
-            'name': i.substring(i.indexOf('{SET}')+5, i.length),
-            'price': sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['price'],
-            'quantity': sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['quantity']-globals.tmpcart[i],
-            'image_uri': sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['image_uri'],
-          });
-        }
-        else{
-          await sellItemBox.put(i, {
-            'id': sellItemBox.get(i)['id'],
-            'name': i,
-            'price': sellItemBox.get(i)['price'],
-            'quantity': sellItemBox.get(i)['quantity'] - globals.tmpcart[i],
-            'image_uri': sellItemBox.get(i)['image_uri'],
-          });
-        }
+      if(i.startsWith('{SET}')){
+        // await sellSetBox.put(i.substring(i.indexOf('{SET}')+5, i.length), {
+        //   'id': sellSetBox.length,
+        //   'name': i.substring(i.indexOf('{SET}')+5, i.length),
+        //   'price': sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['price'],
+        //   'quantity': sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['quantity']-globals.tmpcart[i],
+        //   'image_uri': sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['image_uri'],
+        // });
+        sellSetBox[i.substring(i.indexOf('{SET}')+5, i.length)] = {
+          'id': sellSetBox.length,
+          'price': sellSetBox[i.substring(i.indexOf('{SET}')+5, i.length)]['price'],
+          'quantity': sellSetBox[i.substring(i.indexOf('{SET}')+5, i.length)]['quantity']-globals.tmpcart[i],
+          'image_uri': sellSetBox[i.substring(i.indexOf('{SET}')+5, i.length)]['image_uri'],
+        };
       }
+      else{
+        // await sellItemBox.put(i, {
+        //   'id': sellItemBox.get(i)['id'],
+        //   'name': i,
+        //   'price': sellItemBox.get(i)['price'],
+        //   'quantity': sellItemBox.get(i)['quantity'] - globals.tmpcart[i],
+        //   'image_uri': sellItemBox.get(i)['image_uri'],
+        // });
+        sellItemBox[i] = {
+          'id': sellItemBox[i]['id'],
+          'price': sellItemBox[i]['price'],
+          'quantity': sellItemBox[i]['quantity'] - globals.tmpcart[i],
+          'image_uri': sellItemBox[i]['image_uri'],
+        };
+      }
+    }
     globals.tmpcart.clear();
     notifyListeners();
   }
 
 //-------------SET CARDS----------------
 
-  static final sellSetBox = Hive.box('setBox');
+  // static final sellSetBox = Hive.box('setBox');
+  static final Map<String,dynamic> sellSetBox = {};
 
   Future<void> setSetCard(int id, String name, int price, int quantity, String? image_uri, Map items) async {
-    await sellSetBox.put(name, {
+    // await sellSetBox.put(name, {
+    //   'id': id,
+    //   'price': price,
+    //   'quantity': quantity,
+    //   'image_uri': image_uri!.isNotEmpty?image_uri:"null",
+    //   'items': items,
+    // });
+    sellSetBox[name] = {
       'id': id,
       'price': price,
       'quantity': quantity,
       'image_uri': image_uri!.isNotEmpty?image_uri:"null",
       'items': items,
-    });
+    };
     notifyListeners();
   }
 
   Future<void> editSetCard(String origName, int id, String name, int price, int quantity, String? image_uri, Map items) async {
-    await sellSetBox.put(name, {
+    // await sellSetBox.put(name, {
+    //   'id': id,
+    //   'price': price,
+    //   'quantity': quantity,
+    //   'image_uri': image_uri!.isNotEmpty?image_uri:"null",
+    //   'items': items,
+    // });
+    sellSetBox[name] = {
       'id': id,
       'price': price,
       'quantity': quantity,
       'image_uri': image_uri!.isNotEmpty?image_uri:"null",
       'items': items,
-    });
+    };
     if(origName!=name) {
-      await sellSetBox.delete(origName);
+      // await sellSetBox.delete(origName);
+      sellSetBox.remove(origName);
     }
     notifyListeners();
   }
@@ -197,29 +240,42 @@ class MainAppState extends ChangeNotifier{
   }
 
   static Future<void> delAllSetCards() async {
-    await sellSetBox.clear();
+    sellSetBox.clear();
   }
 
   Future<void> delSetCard(String name) async{
-    await sellSetBox.delete(name);
+    // await sellSetBox.delete(name);
+    sellSetBox.remove(name);
     notifyListeners();
   }
 
   ItemCard getSetCard(int id){
-    return ItemCard(type:ItemCardType.set, name: sellSetBox.keyAt(id), price: sellSetBox.getAt(id)['price'], quantity: sellSetBox.getAt(id)['quantity'], id: id, image_uri: sellSetBox.getAt(id)['image_uri'].toString().isNotEmpty?sellSetBox.getAt(id)['image_uri'].toString():null);
+    return ItemCard(type:ItemCardType.set, name: sellSetBox.keys.elementAt(id), price: sellSetBox[sellSetBox.keys.elementAt(id)]['price'], quantity: sellSetBox[sellSetBox.keys.elementAt(id)]['quantity'], id: id, image_uri: sellSetBox[sellSetBox.keys.elementAt(id)]['image_uri'].toString().isNotEmpty?sellSetBox[sellSetBox.keys.elementAt(id)]['image_uri'].toString():null);
   }
 
   ItemCard getSetCardByName(String name){
-    return ItemCard(type:ItemCardType.set, name: name, price: sellSetBox.get(name)['price'], quantity: sellSetBox.get(name)['quantity'], id: sellSetBox.get(name)['id'], image_uri: sellSetBox.get(name)['image_uri'].toString().isNotEmpty?sellSetBox.get(name)['image_uri'].toString():null);
+    return ItemCard(type:ItemCardType.set, name: name, price: sellSetBox[name]['price'], quantity: sellSetBox[name]['quantity'], id: sellSetBox[name]['id'], image_uri: sellSetBox[name]['image_uri'].toString().isNotEmpty?sellSetBox[name]['image_uri'].toString():null);
   }
 
   ItemCard getSetSellCard(int id){
-    return ItemCard(type:ItemCardType.set, name: sellSetBox.keyAt(id), price: sellSetBox.getAt(id)['price'], quantity: sellSetBox.getAt(id)['quantity'], id: id, image_uri: sellSetBox.getAt(id)['image_uri'].toString().isNotEmpty?sellSetBox.getAt(id)['image_uri'].toString():null, hasdel: false);
+    // return ItemCard(type:ItemCardType.set, name: sellSetBox.keyAt(id), price: sellSetBox.getAt(id)['price'], quantity: sellSetBox.getAt(id)['quantity'], id: id, image_uri: sellSetBox.getAt(id)['image_uri'].toString().isNotEmpty?sellSetBox.getAt(id)['image_uri'].toString():null, hasdel: false);
+    return ItemCard(type:ItemCardType.set, name: sellSetBox.keys.elementAt(id), price: sellSetBox[sellSetBox.keys.elementAt(id)]['price'], quantity: sellSetBox[sellSetBox.keys.elementAt(id)]['quantity'], id: id, image_uri: sellSetBox[sellSetBox.keys.elementAt(id)]['image_uri'].toString().isNotEmpty?sellSetBox[sellSetBox.keys.elementAt(id)]['image_uri'].toString():null, hasdel: false);
   }
 
   Future<void> returnInSetItemsByName(String name,int setQ) async{
-    for(String i in sellSetBox.get(name)['items'].keys){
-      int tmpq=sellSetBox.get(name)['items'][i];
+    // for(String i in sellSetBox.get(name)['items'].keys){
+    //   int tmpq=sellSetBox.get(name)['items'][i];
+    //   editCard(
+    //       i,
+    //       getCardByName(i).id,
+    //       i,
+    //       getCardByName(i).price,
+    //       getCardByName(i).quantity+(tmpq*setQ),
+    //       getCardByName(i).image_uri
+    //   );
+    // }
+    for(String i in sellSetBox[name]['items'].keys){
+      int tmpq=sellSetBox[name]['items'][i];
       editCard(
           i,
           getCardByName(i).id,
@@ -236,50 +292,63 @@ class MainAppState extends ChangeNotifier{
 
 //-------------SETTINGS----------------
 
-  static final settingBox = Hive.box('settingBox');
+  // static final settingBox = Hive.box('settingBox');
+  static final settingBox = {};
 
   static Future<void> wrapInit() async {
-    await settingBox.put('wrapInit', true);
+    // await settingBox.put('wrapInit', true);
+    settingBox['wrapInit'] = true;
   }
 
   static bool getWrapInit() {
-    return settingBox.get('wrapInit', defaultValue: false);
+    // return settingBox.get('wrapInit', defaultValue: false);
+    return settingBox['wrapInit']??false;
   }
 
   static Future<void> setWrapInit() async {
-    await settingBox.put('setWrapInit', true);
+    // await settingBox.put('setWrapInit', true);
+    settingBox['setWrapInit'] = true;
   }
 
   static bool getSetWrapInit() {
-    return settingBox.get('setWrapInit', defaultValue: false);
+    // return settingBox.get('setWrapInit', defaultValue: false);
+    return settingBox['setWrapInit']??false;
   }
 
   static Future<void> launchInit() async {
-    await settingBox.put('launchInit', true);
+    // await settingBox.put('launchInit', true);
+    settingBox['launchInit'] = true;
   }
 
   static bool getLaunchInit() {
-    return settingBox.get('launchInit', defaultValue: false);
+    // return settingBox.get('launchInit', defaultValue: false);
+    return settingBox['launchInit']??false;
   }
 
-  static final soldBox = Hive.box('soldBox');
+  // static final soldBox = Hive.box('soldBox');
+  static final soldBox = {};
 
   static Future<void> addSellLog() async{
     DateTime now = DateTime.now();
     Map<String,Map<String,int>> _tmpItemLogs = {};
     for(final i in globals.tmpcart.keys){
       if(i.startsWith('{SET}')){
+        // _tmpItemLogs[i] = {
+        //   "price": sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['price'],
+        //   "quantity": globals.tmpcart[i]!,
+        //   "earn": sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['price'] * globals.tmpcart[i],
+        // };
         _tmpItemLogs[i] = {
-          "price": sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['price'],
+          "price": sellSetBox[i.substring(i.indexOf('{SET}')+5, i.length)]['price'],
           "quantity": globals.tmpcart[i]!,
-          "earn": sellSetBox.get(i.substring(i.indexOf('{SET}')+5, i.length))['price'] * globals.tmpcart[i],
+          "earn": sellSetBox[i.substring(i.indexOf('{SET}')+5, i.length)]['price'] * globals.tmpcart[i],
         };
       }
       else{
         _tmpItemLogs[i] = {
-          "price": sellItemBox.get(i)['price'],
+          "price": sellItemBox[i]['price'],
           "quantity": globals.tmpcart[i]!,
-          "earn": sellItemBox.get(i)['price'] * globals.tmpcart[i],
+          "earn": sellItemBox[i]['price'] * globals.tmpcart[i],
         };
       }
     }
@@ -288,7 +357,8 @@ class MainAppState extends ChangeNotifier{
       "quantity": -1,
       "earn": ttc2,
     };
-    await soldBox.put(DateFormat('y/M/d-kk:mm:ss').format(now), _tmpItemLogs);
+    // await soldBox.put(DateFormat('y/M/d-kk:mm:ss').format(now), _tmpItemLogs);
+    soldBox[DateFormat('y/M/d-kk:mm:ss').format(now)] = _tmpItemLogs;
   }
 
   static int getSoldBoxLength(){
@@ -296,33 +366,40 @@ class MainAppState extends ChangeNotifier{
   }
 
   Future<void> clearSoldBox() async {
-    await soldBox.clear();
-    await settingBox.delete('totalEarn');
+    soldBox.clear();
+    // await settingBox.delete('totalEarn');
+    settingBox.remove('totalEarn');
     notifyListeners();
   }
 
   getSoldLogAt(int i){
-    var _tmpItemLogs = soldBox.getAt(i);
+    // var _tmpItemLogs = soldBox.getAt(i);
+    var _tmpItemLogs = soldBox[soldBox.keys.elementAt(i)];
     return _tmpItemLogs;
   }
 
   String getSoldLogAtTime(int i){
-    var _tmpItemLogs = soldBox.keyAt(i);
+    // var _tmpItemLogs = soldBox.keyAt(i);
+    var _tmpItemLogs = soldBox.keys.elementAt(i);
     return _tmpItemLogs.toString();
   }
 
   String getEarnedLogAt(int i){
-    var _tmpItemLogs = soldBox.getAt(i);
-    String rt=_tmpItemLogs['{preserved}${soldBox.keyAt(i)}-thisEarn']['earn'].toString();
+    // var _tmpItemLogs = soldBox.getAt(i);
+    var _tmpItemLogs = soldBox[soldBox.keys.elementAt(i)];
+    // String rt=_tmpItemLogs['{preserved}${soldBox.keyAt(i)}-thisEarn']['earn'].toString();
+    String rt=_tmpItemLogs['{preserved}${soldBox.keys.elementAt(i)}-thisEarn']['earn'].toString();
     return rt.isNotEmpty?rt:"";
   }
 
   String getEarned(){
-    return settingBox.get('totalEarn', defaultValue: 0).toString();
+    // return settingBox.get('totalEarn', defaultValue: 0).toString();
+    return settingBox['totalEarn']?.toString()??"0";
   }
 
   static Future<void> addTotalEarn(int earn) async {
-    await settingBox.put('totalEarn', settingBox.get('totalEarn', defaultValue: 0)+earn);
+    // await settingBox.put('totalEarn', settingBox.get('totalEarn', defaultValue: 0)+earn);
+    settingBox['totalEarn'] = settingBox['totalEarn']??0+earn;
   }
 
 }
