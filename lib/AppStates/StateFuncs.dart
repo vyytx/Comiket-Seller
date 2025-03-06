@@ -76,6 +76,15 @@ class MainAppState extends ChangeNotifier{
     notifyListeners();
   }
 
+  static void testingSetCard(int id, String name, int price, int quantity, String? image_uri){
+    sellItemBox[name] = {
+      'id': id,
+      'price': price,
+      'quantity': quantity,
+      'image_uri': image_uri!.isNotEmpty?image_uri:"null",
+    };
+  }
+
   Future<void> editCard(String origName, int id, String name, int price, int quantity, String? image_uri) async {
     // await sellItemBox.put(name, {
     //   'id': id,
@@ -203,6 +212,7 @@ class MainAppState extends ChangeNotifier{
     };
     notifyListeners();
   }
+
 
   Future<void> editSetCard(String origName, int id, String name, int price, int quantity, String? image_uri, Map items) async {
     // await sellSetBox.put(name, {

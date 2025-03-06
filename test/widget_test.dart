@@ -15,6 +15,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'dart:io' show Platform;
@@ -38,5 +39,8 @@ void main() {
     await tester.tap(find.byIcon(Icons.add_rounded));
     await tester.pump();
     expect(find.text('儲存'), findsOneWidget);
+
+    MainAppState.testingSetCard(MainAppState.getNowId(), "1", int.parse("1"), int.parse("1"), "".isNotEmpty?"":"",);
+    expect(MainAppState.getNowId(), 1);
   });
 }
