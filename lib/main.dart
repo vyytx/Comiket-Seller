@@ -58,35 +58,35 @@ GoRouter get _router => GoRouter(
       path: '/',
       pageBuilder: (context, state) => NoTransitionPage(
         key: state.pageKey,
-        child: const landingPage(),    //child: const WelcomePage(),
+        child: SelectionArea(child: const landingPage()),    //child: const WelcomePage(),
       ),
     ),
     GoRoute(
       path: '/set',
       pageBuilder: (context, state) => NoTransitionPage(
         key: state.pageKey,
-        child: const setPage(),    //child: const WelcomePage(),
+        child: SelectionArea(child: const setPage()),    //child: const WelcomePage(),
       ),
     ),
     GoRoute(
       path: '/sell',
       pageBuilder: (context, state) => NoTransitionPage(
         key: state.pageKey,
-        child: const sellPage(),
+        child: SelectionArea(child: const sellPage()),
       ),
     ),
     GoRoute(
       path: '/log',
       pageBuilder: (context, state) => NoTransitionPage(
         key: state.pageKey,
-        child: const logPage(),
+        child: SelectionArea(child: const logPage()),
       ),
     ),
     GoRoute(
       path: '/makeSet',
       pageBuilder: (context, state) => NoTransitionPage(
         key: state.pageKey,
-        child: const makeSetPage(),
+        child: SelectionArea(child: const makeSetPage()),
       ),
     ),
   ],
@@ -104,8 +104,8 @@ class MyApp extends StatelessWidget {
         title: 'COMIKET自販機',
         theme: ThemeData(
           scrollbarTheme: ScrollbarThemeData(
-            thumbColor: MaterialStateProperty.all(Color(0xFF474747)),
-            trackColor: MaterialStateProperty.all(Color(0xFF1f1f1f)),
+            thumbColor: WidgetStateProperty.all(Color(0xFF474747)),
+            trackColor: WidgetStateProperty.all(Color(0xFF1f1f1f)),
           ),
           scaffoldBackgroundColor: Color(0xFF1f1f1f),
           splashColor: Colors.transparent,
