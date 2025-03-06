@@ -84,10 +84,10 @@ class _MyStatefulWidgetState extends State<landingPage> with TickerProviderState
                               fontSize: 24,
                               fontWeight: FontWeight.bold),
                         ),
-                        Image(
-                          image: NetworkImage('https://i.imgur.com/Sxd68s5.gif'),
-                          height: 50,
-                        ),
+                        // Image(
+                        //   image: NetworkImage('https://i.imgur.com/Sxd68s5.gif'),
+                        //   height: 50,
+                        // ),
                         SizedBox(width: 10,),
                       ],
                     )

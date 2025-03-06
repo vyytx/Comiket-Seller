@@ -20,11 +20,11 @@ import 'globals.dart' as globals;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
-  await Hive.initFlutter('comiketSellerDB');
-  await Hive.openBox('cardBox');
-  await Hive.openBox('setBox');
-  await Hive.openBox('settingBox');
-  await Hive.openBox('soldBox');
+  // await Hive.initFlutter('comiketSellerDB');
+  // await Hive.openBox('cardBox');
+  // await Hive.openBox('setBox');
+  // await Hive.openBox('settingBox');
+  // await Hive.openBox('soldBox');
 
   if (kIsWeb) {
     globals.isInApp = false;
@@ -51,7 +51,7 @@ void main() async {
 
 GoRouter get _router => GoRouter(
   errorBuilder: ((context, state) => notFoundPage()),
-  initialLocation: '/',
+  initialLocation: '/set',
   // debugLogDiagnostics: true,
   routes: [
     GoRoute(
