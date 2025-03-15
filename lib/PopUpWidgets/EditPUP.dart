@@ -3,6 +3,8 @@ import 'package:comiket_seller/CardWidgets/ItemCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../AppStates/StateFuncs.dart';
+import '../AppStates/Validators.dart';
+
 
 class EditCard extends StatefulWidget {
   EditCard({
@@ -126,18 +128,7 @@ class _MyStatefulWidgetState extends State<EditCard>
                       cursorColor: _formInputCur,
                       style: _formInputSty,
                       decoration: _formInputDeco,
-                      validator: (value) {
-                        if (value == null || value.isEmpty || value.contains(RegExp(r'[{}]'))) {
-                          return "請輸入正確的商品名稱";
-                        }
-                        else if (MainAppState.hadName(value)&&value!=lastName&&!_qIsDisabled()) {
-                          return "商品名稱重複";
-                        }
-                        else if (MainAppState.hadSetName(value)&&value!=lastName&&_qIsDisabled()) {
-                          return "套組名稱重複";
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.validateProductNameAndSetName(value, lastName, _qIsDisabled()),
                     ),
                     SizedBox(height: 20,),
                     Text("商品價格",style: TextStyle(fontWeight: FontWeight.bold,color: textColor),),
@@ -147,12 +138,7 @@ class _MyStatefulWidgetState extends State<EditCard>
                       cursorColor: _formInputCur,
                       style: _formInputSty,
                       decoration: _formInputDeco,
-                      validator: (value) {
-                        if (value == null || value.isEmpty || int.tryParse(value) == null || int.tryParse(value)!<0) {
-                          return "請輸入正確的價格";
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.validatePrice(value),
                     ),
                     SizedBox(height: 20,),
                     Text("商品數量",style: TextStyle(fontWeight: FontWeight.bold,color: _qIsDisabled()?disabledTextColor:textColor),),
@@ -164,12 +150,7 @@ class _MyStatefulWidgetState extends State<EditCard>
                           color: _qIsDisabled()?Color(0xFF808080):Color(0xFFd6d6d6)
                       ),
                       decoration: _qIsDisabled()?_disabledFormInputDeco:_formInputDeco,
-                      validator: (value) {
-                        if (value == null || value.isEmpty || int.tryParse(value) == null || int.tryParse(value)!<0) {
-                          return "請輸入正確的數量";
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.validateQuantity(value),
                       readOnly: _qIsDisabled(),
                     ),
                     SizedBox(height: 20,),
@@ -180,12 +161,7 @@ class _MyStatefulWidgetState extends State<EditCard>
                       cursorColor: _formInputCur,
                       style: _formInputSty,
                       decoration: _formInputDeco,
-                      validator: (value) {
-                        if ((value!.isNotEmpty && Uri.parse(value).isAbsolute == false)) {
-                          return "請輸入正確圖片URL";
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.validateURL(value),
                     ),
                     SizedBox(height: 20,),
                     Row(
