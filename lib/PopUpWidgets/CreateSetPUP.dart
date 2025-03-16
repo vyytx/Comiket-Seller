@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import '../AppStates/StateFuncs.dart';
 import '../globals.dart' as globals;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import '../AppStates/Validators.dart';
+
 
 int randomId() {
   return DateTime.now().millisecondsSinceEpoch;
@@ -102,15 +104,7 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
                       cursorColor: _formInputCur,
                       style: _formInputSty,
                       decoration: _formInputDeco,
-                      validator: (value) {
-                        if (value == null || value.isEmpty || value.contains(RegExp(r'[{}]'))) {
-                          return "請輸入正確的套組名稱";
-                        }
-                        else if (MainAppState.hadSetName(value)) {
-                          return "套組名稱重複";
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.validateSetName(value),
                     ),
                     SizedBox(height: 20,),
                     Text("套組價格",style: TextStyle(fontWeight: FontWeight.bold,color: textColor),),
@@ -120,12 +114,7 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
                       cursorColor: _formInputCur,
                       style: _formInputSty,
                       decoration: _formInputDeco,
-                      validator: (value) {
-                        if (value == null || value.isEmpty || int.tryParse(value) == null || int.tryParse(value)!<0) {
-                          return "請輸入正確的價格";
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.validatePrice(value),
                     ),
                     SizedBox(height: 20,),
                     Text("套組數量",style: TextStyle(fontWeight: FontWeight.bold,color: textColor),),
@@ -135,12 +124,7 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
                       cursorColor: _formInputCur,
                       style: _formInputSty,
                       decoration: _formInputDeco,
-                      validator: (value) {
-                        if (value == null || value.isEmpty || int.tryParse(value) == null || int.tryParse(value)!<0) {
-                          return "請輸入正確的數量";
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.validateQuantity(value),
                     ),
                     SizedBox(height: 20,),
                     Text("圖片URL",style: TextStyle(fontWeight: FontWeight.bold,color: textColor),),
@@ -150,12 +134,7 @@ class _MyStatefulWidgetState extends State<CreateSetCard>
                       cursorColor: _formInputCur,
                       style: _formInputSty,
                       decoration: _formInputDeco,
-                      validator: (value) {
-                        if ((value!.isNotEmpty && Uri.parse(value).isAbsolute == false)) {
-                          return "請輸入正確圖片URL";
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.validateURL(value),
                     ),
                     SizedBox(height: 20,),
                     Text("套組內容物",style: TextStyle(fontWeight: FontWeight.bold,color: textColor),),
